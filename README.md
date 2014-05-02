@@ -1,12 +1,4 @@
-# keytool cookbook
-
-# Requirements
-
-# Usage
-
-# Attributes
-
-# Recipes
+Cookbook exposing a LWRP to manage Java keystores with the ```keytool``` utility.
 
 # Author
 
