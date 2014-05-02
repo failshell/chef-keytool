@@ -8,9 +8,13 @@ Vagrant.configure("2") do |config|
     java6.vm.hostname = "java6"
     java6.vm.provision :chef_solo do |chef|
       chef.json = {
+        "java" => {
+          "jdk_version" => 6
+        }
       }
 
       chef.run_list = [
+        "recipe[java]",
         "recipe[keytool::default]"
       ]
     end
@@ -20,9 +24,13 @@ Vagrant.configure("2") do |config|
    java7.vm.hostname = "java7"
     java7.vm.provision :chef_solo do |chef|
       chef.json = {
+        "java" => {
+          "jdk_version" => 7
+        }
       }
 
       chef.run_list = [
+        "recipe[java]",
         "recipe[keytool::default]"
       ]
     end
