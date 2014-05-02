@@ -12,11 +12,35 @@ def load_current_resource
   @cert_file = new_resource.file.nil? ? "/tmp/#{new_resource.name}.crt" : new_resource.file
 end
 
+def already_in_keystore?(cert_alias)
+  keytool = @keytool + " -list"
+
+  begin
+    Mixlib::ShellOut.new(keytool).run_command.error!
+    true
+  rescue
+    false
+  end
+end
+
 action :exportcert do
-  @keytool += " -file #{@cert_file} -export"
+  @keytool += " -file #{@cert_file} -exportcert"
 
   unless ::File.exists?(@cert_file)
     Mixlib::ShellOut.new(@keytool).run_command.error!
     Chef::Log.info("keytool_manage[#{new_resource.cert_alias}] exported to #{@cert_file}")
+  end
+end
+
+action :importcert do
+  @keytool += " -file #{@cert_file} -importcert"
+  @keytool.insert(0, 'echo yes | ')
+
+
+  if ::File.exists?(@cert_file)
+    unless already_in_keystore?(new_resource.cert_alias)
+      Mixlib::ShellOut.new(@keytool).run_command.error!
+      Chef::Log.info("keytool_manage[#{new_resource.cert_alias}] imported to #{new_resource.keystore}")
+    end
   end
 end

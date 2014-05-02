@@ -16,16 +16,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Test keystore - store password is 1qaz2wsx
+cookbook_file '/tmp/keystore.jks' do
+  action :create_if_missing
+end
+
+# Export tests
 keytool_manage 'thawtepremiumserverca' do
-  action :exportcert
   keystore '/etc/pki/java/cacerts'
   storepass 'changeit'
 end
 
 keytool_manage 'extra-cnnicroot' do
-  action :exportcert
   file '/var/tmp/extra-cnnicroot.crt'
   keystore '/etc/pki/java/cacerts'
   storepass 'changeit'
   additional '-v'
+end
+
+# Import tests
+keytool_manage 'thawtepremiumserverca' do
+  action :importcert
+  keystore '/tmp/keystore.jks'
+  storepass '1qaz2wsx'
 end
