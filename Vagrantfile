@@ -15,7 +15,8 @@ Vagrant.configure("2") do |config|
 
       chef.run_list = [
         "recipe[java]",
-        "recipe[keytool::default]"
+        "recipe[keytool::default]",
+        "recipe[keytool::test]"
       ]
     end
   end
@@ -31,7 +32,8 @@ Vagrant.configure("2") do |config|
 
       chef.run_list = [
         "recipe[java]",
-        "recipe[keytool::default]"
+        "recipe[keytool::default]",
+        "recipe[keytool::test]"
       ]
     end
   end
