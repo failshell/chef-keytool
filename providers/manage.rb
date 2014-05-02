@@ -44,3 +44,12 @@ action :importcert do
     end
   end
 end
+
+action :deletecert do
+  @keytool += ' -delete'
+
+  if already_in_keystore?(new_resource.cert_alias)
+    Mixlib::ShellOut.new(@keytool).run_command.error!
+    Chef::Log.info("keytool_manage[#{new_resource.cert_alias}] deleted from #{new_resource.keystore}")
+  end
+end

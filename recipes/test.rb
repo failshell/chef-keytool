@@ -21,6 +21,13 @@ cookbook_file '/tmp/keystore.jks' do
   action :create_if_missing
 end
 
+# Clean up before each run
+%w(/tmp/thawtepremiumserverca.crt /var/tmp/extra-cnnicroot.crt).each do |e|
+  file e do
+    action :delete
+  end
+end
+
 # Export tests
 keytool_manage 'thawtepremiumserverca' do
   keystore '/etc/pki/java/cacerts'
@@ -34,9 +41,29 @@ keytool_manage 'extra-cnnicroot' do
   additional '-v'
 end
 
+# Delete tests
+keytool_manage 'thawtepremiumserverca' do
+  action :deletecert
+  keystore '/tmp/keystore.jks'
+  storepass '1qaz2wsx'
+end
+
+keytool_manage 'extra-cnnicroot' do
+  action :deletecert
+  keystore '/tmp/keystore.jks'
+  storepass '1qaz2wsx'
+end
+
 # Import tests
 keytool_manage 'thawtepremiumserverca' do
   action :importcert
+  keystore '/tmp/keystore.jks'
+  storepass '1qaz2wsx'
+end
+
+keytool_manage 'extra-cnnicroot' do
+  action :importcert
+  file '/var/tmp/extra-cnnicroot.crt'
   keystore '/tmp/keystore.jks'
   storepass '1qaz2wsx'
 end

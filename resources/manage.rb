@@ -1,4 +1,4 @@
-actions :exportcert, :importcert
+actions :exportcert, :importcert, :deletecert
 default_action :exportcert
 
 attribute :additional, :kind_of => String
