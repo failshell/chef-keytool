@@ -28,16 +28,24 @@ end
   end
 end
 
+# Change keystore password tests
+keytool_manage 'cacerts' do
+  action :storepasswd
+  keystore '/etc/pki/java/cacerts'
+  storepass 'changeit'
+  new_pass 'supersecretsauce'
+end
+
 # Export tests
 keytool_manage 'thawtepremiumserverca' do
   keystore '/etc/pki/java/cacerts'
-  storepass 'changeit'
+  storepass 'supersecretsauce'
 end
 
 keytool_manage 'extra-cnnicroot' do
   file '/var/tmp/extra-cnnicroot.crt'
   keystore '/etc/pki/java/cacerts'
-  storepass 'changeit'
+  storepass 'supersecretsauce'
   additional '-v'
 end
 

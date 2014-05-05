@@ -53,3 +53,10 @@ action :deletecert do
     Chef::Log.info("keytool_manage[#{new_resource.cert_alias}] deleted from #{new_resource.keystore}")
   end
 end
+
+action :storepasswd do
+  @keytool += " -storepasswd -new #{new_resource.new_pass}"
+
+  Mixlib::ShellOut.new(@keytool).run_command.error!
+  Chef::Log.info("keytool_manage[#{new_resource.cert_alias}] changed storepass for #{new_resource.keystore}")
+end
