@@ -3,12 +3,14 @@ require 'mixlib/shellout'
 use_inline_resources
 
 def load_current_resource
+  pass = new_resource.storepass_file.nil? ? new_resource.storepass : ::File.open(new_resource.storepass_file).read.chomp("\n")
+
   @keytool = new_resource.keytool
   @keytool += " -keystore #{new_resource.keystore}"
-  @keytool += " -storepass #{new_resource.storepass}"
+  @keytool += " -storepass #{pass}"
   @keytool += " #{new_resource.additional}" unless new_resource.additional.nil?
 
-  @cert_file = new_resource.file.nil? ? "/tmp/#{new_resource.name}.crt" : new_resource.file
+  @cert_file = new_resource.file.nil? ? "/tmp/#{new_resource.cert_alias}.crt" : new_resource.file
 end
 
 def already_in_keystore?(cert_alias)
@@ -42,6 +44,7 @@ action :exportcert do
     Mixlib::ShellOut.new(@keytool).run_command.error!
     Chef::Log.info("keytool_manage[#{new_resource.cert_alias}] exported to #{@cert_file}")
   end
+  new_resource.updated_by_last_action(true)
 end
 
 action :importcert do
@@ -55,6 +58,7 @@ action :importcert do
       Chef::Log.info("keytool_manage[#{new_resource.cert_alias}] imported to #{new_resource.keystore}")
     end
   end
+  new_resource.updated_by_last_action(true)
 end
 
 action :deletecert do
@@ -64,6 +68,7 @@ action :deletecert do
     Mixlib::ShellOut.new(@keytool).run_command.error!
     Chef::Log.info("keytool_manage[#{new_resource.cert_alias}] deleted from #{new_resource.keystore}")
   end
+  new_resource.updated_by_last_action(true)
 end
 
 action :storepasswd do
@@ -71,6 +76,7 @@ action :storepasswd do
 
   unless is_current_pass?(new_resource.new_pass)
     Mixlib::ShellOut.new(@keytool).run_command.error!
-    Chef::Log.info("keytool_manage[#{new_resource.cert_alias}] changed storepass for #{new_resource.keystore}")
+    Chef::Log.info("keytool_manage[#{new_resource.keystore}] changed storepass for #{new_resource.keystore}")
   end
+  new_resource.updated_by_last_action(true)
 end

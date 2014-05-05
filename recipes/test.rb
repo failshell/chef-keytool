@@ -21,6 +21,10 @@ cookbook_file '/tmp/keystore.jks' do
   action :create_if_missing
 end
 
+file '/tmp/storepass' do
+  content 'supersecretsauce'
+end
+
 # Clean up before each run
 %w(/tmp/thawtepremiumserverca.crt /var/tmp/extra-cnnicroot.crt).each do |e|
   file e do
@@ -37,12 +41,14 @@ keytool_manage 'cacerts' do
 end
 
 # Export tests
-keytool_manage 'thawtepremiumserverca' do
+keytool_manage 'export thawtepremiumserverca' do
+  cert_alias 'thawtepremiumserverca'
   keystore '/etc/pki/java/cacerts'
-  storepass 'supersecretsauce'
+  storepass_file '/tmp/storepass'
 end
 
-keytool_manage 'extra-cnnicroot' do
+keytool_manage 'export extra-cnnicroot' do
+  cert_alias 'extra-cnnicroot'
   file '/var/tmp/extra-cnnicroot.crt'
   keystore '/etc/pki/java/cacerts'
   storepass 'supersecretsauce'
@@ -50,26 +56,30 @@ keytool_manage 'extra-cnnicroot' do
 end
 
 # Delete tests
-keytool_manage 'thawtepremiumserverca' do
+keytool_manage 'delete thawtepremiumserverca' do
+  cert_alias 'thawtepremiumserverca'
   action :deletecert
   keystore '/tmp/keystore.jks'
   storepass '1qaz2wsx'
 end
 
-keytool_manage 'extra-cnnicroot' do
+keytool_manage 'delete extra-cnnicroot' do
+  cert_alias 'extra-cnnicroot'
   action :deletecert
   keystore '/tmp/keystore.jks'
   storepass '1qaz2wsx'
 end
 
 # Import tests
-keytool_manage 'thawtepremiumserverca' do
+keytool_manage 'import thawtepremiumserverca' do
+  cert_alias 'thawtepremiumserverca'
   action :importcert
   keystore '/tmp/keystore.jks'
   storepass '1qaz2wsx'
 end
 
-keytool_manage 'extra-cnnicroot' do
+keytool_manage 'import extra-cnnicroot' do
+  cert_alias 'extra-cnnicroot'
   action :importcert
   file '/var/tmp/extra-cnnicroot.crt'
   keystore '/tmp/keystore.jks'
