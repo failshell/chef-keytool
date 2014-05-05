@@ -8,3 +8,4 @@ attribute :keystore, :kind_of => String, :required => true
 attribute :keytool, :kind_of => String, :default => 'keytool'
 attribute :new_pass, :kind_of => String
 attribute :storepass, :kind_of => String, :required => true
+attribute :storepass_file, :kind_of => String

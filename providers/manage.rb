@@ -6,25 +6,37 @@ def load_current_resource
   @keytool = new_resource.keytool
   @keytool += " -keystore #{new_resource.keystore}"
   @keytool += " -storepass #{new_resource.storepass}"
-  @keytool += " -alias #{new_resource.cert_alias}"
   @keytool += " #{new_resource.additional}" unless new_resource.additional.nil?
 
   @cert_file = new_resource.file.nil? ? "/tmp/#{new_resource.name}.crt" : new_resource.file
 end
 
 def already_in_keystore?(cert_alias)
-  keytool = @keytool + " -list"
+  keytool = @keytool + " -list  -alias #{new_resource.cert_alias}"
 
-  begin
-    Mixlib::ShellOut.new(keytool).run_command.error!
-    true
-  rescue
-    false
+  cmd = Mixlib::ShellOut.new(keytool).run_command
+  case cmd.status
+    when 0
+      true
+    else
+      false
+  end
+end
+
+def is_current_pass?(pass)
+  keytool = "#{new_resource.keytool} -keystore #{new_resource.keystore} -storepass #{pass} -list"
+
+  cmd = Mixlib::ShellOut.new(keytool).run_command
+  case cmd.status
+    when 0
+      true
+    else
+      false
   end
 end
 
 action :exportcert do
-  @keytool += " -file #{@cert_file} -exportcert"
+  @keytool += " -file #{@cert_file} -exportcert  -alias #{new_resource.cert_alias}"
 
   unless ::File.exists?(@cert_file)
     Mixlib::ShellOut.new(@keytool).run_command.error!
@@ -33,7 +45,7 @@ action :exportcert do
 end
 
 action :importcert do
-  @keytool += " -file #{@cert_file} -importcert"
+  @keytool += " -file #{@cert_file} -importcert  -alias #{new_resource.cert_alias}"
   @keytool.insert(0, 'echo yes | ')
 
 
@@ -46,7 +58,7 @@ action :importcert do
 end
 
 action :deletecert do
-  @keytool += ' -delete'
+  @keytool += " -delete  -alias #{new_resource.cert_alias}"
 
   if already_in_keystore?(new_resource.cert_alias)
     Mixlib::ShellOut.new(@keytool).run_command.error!
@@ -57,6 +69,8 @@ end
 action :storepasswd do
   @keytool += " -storepasswd -new #{new_resource.new_pass}"
 
-  Mixlib::ShellOut.new(@keytool).run_command.error!
-  Chef::Log.info("keytool_manage[#{new_resource.cert_alias}] changed storepass for #{new_resource.keystore}")
+  unless is_current_pass?(new_resource.new_pass)
+    Mixlib::ShellOut.new(@keytool).run_command.error!
+    Chef::Log.info("keytool_manage[#{new_resource.cert_alias}] changed storepass for #{new_resource.keystore}")
+  end
 end
