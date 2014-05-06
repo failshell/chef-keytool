@@ -44,7 +44,7 @@ action :exportcert do
     Mixlib::ShellOut.new(@keytool).run_command.error!
     Chef::Log.info("keytool_manage[#{new_resource.cert_alias}] exported to #{@cert_file}")
   end
-  new_resource.updated_by_last_action(true)
+  #new_resource.updated_by_last_action(true)
 end
 
 action :importcert do
@@ -58,7 +58,7 @@ action :importcert do
       Chef::Log.info("keytool_manage[#{new_resource.cert_alias}] imported to #{new_resource.keystore}")
     end
   end
-  new_resource.updated_by_last_action(true)
+  #new_resource.updated_by_last_action(true)
 end
 
 action :deletecert do
@@ -68,7 +68,7 @@ action :deletecert do
     Mixlib::ShellOut.new(@keytool).run_command.error!
     Chef::Log.info("keytool_manage[#{new_resource.cert_alias}] deleted from #{new_resource.keystore}")
   end
-  new_resource.updated_by_last_action(true)
+  #new_resource.updated_by_last_action(true)
 end
 
 action :storepasswd do
@@ -78,5 +78,5 @@ action :storepasswd do
     Mixlib::ShellOut.new(@keytool).run_command.error!
     Chef::Log.info("keytool_manage[#{new_resource.keystore}] changed storepass for #{new_resource.keystore}")
   end
-  new_resource.updated_by_last_action(true)
+  #new_resource.updated_by_last_action(true)
 end
