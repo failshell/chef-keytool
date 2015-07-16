@@ -9,6 +9,10 @@ if defined?(ChefSpec)
     ChefSpec::Matchers::ResourceMatcher.new(:keytool_manage, :importcert, resource_name)
   end
 
+  def importkeystore_keytool_manage(resource_name)
+    ChefSpec::Matchers::ResourceMatcher.new(:keytool_manage, :importkeystore, resource_name)
+  end
+
   def deletecert_keytool_manage(resource_name)
     ChefSpec::Matchers::ResourceMatcher.new(:keytool_manage, :deletecert, resource_name)
   end

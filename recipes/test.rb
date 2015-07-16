@@ -55,6 +55,24 @@ keytool_manage 'export extra-cnnicroot' do
   additional '-v'
 end
 
+# Import keystore tests
+p12_file_name = 'keytool.example.com.p12'
+p12_file_path = "#{Chef::Config[:file_cache_path]}/#{p12_file_name}"
+
+cookbook_file p12_file_path do
+  source p12_file_name
+end
+
+keytool_manage "import keytool.example.com keystore from PKCS12 format" do
+  cert_alias 'importkeystore'
+  file p12_file_path
+  keystore "#{Chef::Config[:file_cache_path]}/#{p12_file_name}.jks"
+  storepass 'supersecretsauce'
+  srcstorepass 'saucesecretsuper'
+  srcstoretype 'PKCS12'
+  action :importkeystore
+end
+
 # Delete tests
 keytool_manage 'delete thawtepremiumserverca' do
   cert_alias 'thawtepremiumserverca'
