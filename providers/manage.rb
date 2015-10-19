@@ -100,15 +100,15 @@ action :createstore do
   @keytool = new_resource.keytool
   keytool_command= <<-eos
   -genkey -noprompt \
-  -alias #{keystore_alias} \
-  -dname "CN=#{common_name}, OU=#{org_unit}, O=#{org}, L=#{location}, C=#{country}" \
-  -keystore #{keystore} \
-  -storepass #{password} \
-  -keypass #{password}
+  -alias #{new_resource.keystore_alias} \
+  -dname "CN=#{new_resource.common_name}, OU=#{new_resource.org_unit}, O=#{new_resource.org}, L=#{new_resource.location}, C=#{new_resource.country}" \
+  -keystore #{new_resource.keystore} \
+  -storepass #{new_resource.password} \
+  -keypass #{new_resource.password}
 eos
   @keytool += keytool_command
 
-  unless File::exists?("#{keystore}")
+  unless ::File.exists?("#{new_resource.keystore}")
     Mixlib::ShellOut.new(@keytool).run_command.error!
     Chef::Log.info("keytool_manage[#{new_resource.keystore}] created new keystore #{new_resource.keystore}")
     new_resource.updated_by_last_action(true)
