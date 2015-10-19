@@ -103,3 +103,14 @@ keytool_manage 'import extra-cnnicroot' do
   keystore '/tmp/keystore.jks'
   storepass '1qaz2wsx'
 end
+
+keytool_manage 'create a new keystore' do
+  action :createstore
+  keystore '/tmp/keystore.jks'
+  keystore_alias 'testkeystore'
+  common_name 'test_common_name'
+  org_unit 'test_org_unit'
+  org 'test_org'
+  location 'test_location'
+  country 'country'
+end
