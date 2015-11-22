@@ -19,6 +19,8 @@ suites:
     attributes:
       java:
         jdk_version: 6
+    includes:
+      - centos-6.5
   - name: java7
     run_list:
       - recipe[java]
