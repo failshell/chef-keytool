@@ -6,3 +6,4 @@ See the ```test``` recipe for examples.
 # Author
 
 Author:: Jean-Francois Theroux (<me@failshell.io>)
+Author:: Christian Fischer (<chef-cookbooks@computerlyrik.de>)
