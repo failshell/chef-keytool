@@ -17,3 +17,17 @@
 # limitations under the License.
 #
 
+node['keytool']['keystores'].each do |label,keystore|
+  keystore.certificates.each do |cert_name, cert_path|
+
+    keytool_manage "import certificate #{cert_name} into keystore #{label}" do
+      keytool keystore[:keytool] || "#{node['java']['java_home']}/bin/keytool"
+      keystore keystore[:path] || "#{node['java']['java_home']}/jre/lib/security/cacerts"
+      storepass keystore[:password] || "changeit"
+      cert_alias cert_name
+      file cert_path
+      additional "-trustcacerts"
+      action :importcert
+    end
+  end
+end
