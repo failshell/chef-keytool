@@ -31,3 +31,5 @@ suites:
     attributes:
       java:
         jdk_version: 7
+    includes:
+      - centos-6.5
