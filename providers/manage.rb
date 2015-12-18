@@ -103,8 +103,8 @@ action :createstore do
   -alias #{new_resource.keystore_alias} \
   -dname "CN=#{new_resource.common_name}, OU=#{new_resource.org_unit}, O=#{new_resource.org}, L=#{new_resource.location}, C=#{new_resource.country}" \
   -keystore #{new_resource.keystore} \
-  -storepass #{new_resource.password} \
-  -keypass #{new_resource.password}
+  -storepass #{new_resource.storepass} \
+  -keypass #{new_resource.storepass}
 eos
   @keytool += keytool_command
 
