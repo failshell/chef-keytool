@@ -113,4 +113,5 @@ keytool_manage 'create a new keystore' do
   org 'test_org'
   location 'test_location'
   country 'country'
+  storepass '1qaz2wsx'
 end
