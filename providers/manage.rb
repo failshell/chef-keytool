@@ -114,3 +114,13 @@ eos
     new_resource.updated_by_last_action(true)
   end
 end
+
+action :certpasswd do
+  @keytool += " -keypasswd -alias #{new_resource.cert_alias} -keypass #{new_resource.keypass} -new #{new_resource.new_pass}"
+
+  unless already_in_keystore?(new_resource.cert_alias)
+    Mixlib::ShellOut.new(@keytool).run_command.error! 
+    Chef::Log.info("keytool_manage[#{new_resource.cert_alias}] changed keypass for #{new_resource.keystore} on #{new_resource.keystore_alias}")
+    new_resource.updated_by_last_action(true)
+  end
+end

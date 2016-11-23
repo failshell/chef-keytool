@@ -40,6 +40,16 @@ keytool_manage 'cacerts' do
   new_pass 'supersecretsauce'
 end
 
+# Change certificate password tests
+keytool_manage 'change cert passwd' do
+  action :certpasswd
+  keystore '/etc/pki/java/cacerts'
+  storepass 'changeit'
+  cert_alias 'thatalreadyimportedcert'
+  keypass 'supersecretsauce'
+  new_pass 'hotchilisauce'
+end
+
 # Export tests
 keytool_manage 'export thawtepremiumserverca' do
   cert_alias 'thawtepremiumserverca'

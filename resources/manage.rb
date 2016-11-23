@@ -19,3 +19,6 @@ attribute :country, :kind_of => String
 # these attributes are specific to the :importkeystore action
 attribute :srcstoretype, :kind_of => String
 attribute :srcstorepass, :kind_of => String
+
+# this attribute is specific to the :certpasswd action
+attribute :keypass, :kind_of => String
