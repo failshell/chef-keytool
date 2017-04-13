@@ -27,3 +27,17 @@ suites:
     attributes:
       java:
         jdk_version: 7
+  - name: by_attributes
+    run_list:
+      - recipe[keytool_test]
+      - recipe[java]
+      - recipe[keytool::manage_by_attributes]
+    attributes:
+      java:
+        jdk_version: 7
+      keytool :
+        keystores :
+          main_keystore :
+            certificates :
+              cacert-class3 : "/etc/ssl/certs/cacert.class3.crt"
+              cacert-root : "/etc/ssl/certs/cacert-root.crt"
