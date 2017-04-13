@@ -124,4 +124,5 @@ keytool_manage 'create a new keystore' do
   location 'test_location'
   country 'country'
   storepass '1qaz2wsx'
+  additional '-ext san=dns:localhost,ip:127.0.0.1'
 end
